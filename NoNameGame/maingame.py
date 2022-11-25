@@ -61,19 +61,20 @@ def drawText(text, surface, x, y, font = FONT, color = BLACK):
     
 def Menu():
     global MODE
-    screen.blit(OPENINGTURNOFFIMG,[0,0])
+    screen.blit(pg.transform.scale(OPENINGTURNOFFIMG, [800,600]),[0,0])
     current_Time = pg.time.get_ticks()
     if current_Time > 2000:
-        screen.blit(OPENINGIMG,[0,0])
+        screen.blit(pg.transform.scale(OPENINGIMG, [800,600]),[0,0])
     if current_Time > 4000:
         menu_trans = pg.transform.scale(MENUSELECT, [330,110])
         menu_highlight_trans = pg.transform.scale(MENUSELECTHIGHLIGHT, [330,110])
         menu_select_trans = pg.transform.scale(GAMESTARTBUTTON, [200,50])
+        menu_start = pg.transform.scale(STARTIMG, [800,600])
         if MODE == 0:
-            screen.blit(STARTIMG,[0,0])
+            screen.blit(menu_start,[0,0])
             drawText("오늘은",screen,230,200,SUBGAMETITLEFONT,BLACK)
             drawText("방구석 요리사",screen,230,240,GAMETITLEFONT,BLACK)
-            Button(GAMESTARTBUTTON, 250, 310, 300, 63, GAMESTARTBUTTONPRESSED, 250, 310, NextMenuSelectScene)
+            Button(pg.transform.scale(GAMESTARTBUTTON, [300, 63]), 250, 310, 300, 63, pg.transform.scale(GAMESTARTBUTTONPRESSED, [300,63]), 250, 310, NextMenuSelectScene)
             drawText("메뉴 선택",screen,340,320,FONT,BLACK)
         elif MODE == 1:
             screen.fill(IVORY)
