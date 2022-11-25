@@ -17,14 +17,14 @@ FONT = pg.font.Font('font/malgun.ttf', 25)
 GAMETITLEFONT = pg.font.Font('font/malgun.ttf', 50)
 SUBGAMETITLEFONT = pg.font.Font('font/malgun.ttf', 25)
 #image/background
-OPENINGTURNOFFIMG = pg.image.load('background/opening_turnoff.png')
-OPENINGIMG = pg.image.load('background/opening.png')
-STARTIMG = pg.image.load('background/start.png')
+OPENINGTURNOFFIMG = pg.image.load('image/background/opening_turnoff.png')
+OPENINGIMG = pg.image.load('image/background/opening.png')
+STARTIMG = pg.image.load('image/background/start.png')
 #image/icon/
-GAMESTARTBUTTON = pg.image.load('icon/game_start.png')
-GAMESTARTBUTTONPRESSED = pg.image.load('icon/game_start_press.png')
-MENUSELECT = pg.image.load('icon/menu_select.png')
-MENUSELECTHIGHLIGHT = pg.image.load('icon/menu_select_highlight.png')
+GAMESTARTBUTTON = pg.image.load('image/icon/game_start.png')
+GAMESTARTBUTTONPRESSED = pg.image.load('image/icon/game_start_press.png')
+MENUSELECT = pg.image.load('image/icon/menu_select.png')
+MENUSELECTHIGHLIGHT = pg.image.load('image/icon/menu_select_highlight.png')
 
 
 # define colors
