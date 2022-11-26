@@ -1,10 +1,23 @@
 import pygame as pg
-import cv2, random, sys, time
+import cv2, sys, random, time
+import mediapipe as mp
 from settings import *
 
 pg.init()
 pg.display.set_caption("COOKINGAME")
 screen = pg.display.set_mode((WIDTH,HEIGHT))
+
+class Button():
+    def __init__(self, img_in, x, y, width, height, img_act, x_act, y_act, action=None):
+        mouse = pg.mouse.get_pos()
+        click = pg.mouse.get_pressed()
+        if x + width > mouse[0] > x and y + height > mouse[1] > y:
+            screen.blit(img_act,(x_act, y_act))
+            if click[0] and action != None:
+                time.sleep(0.1)
+                action()
+        else:
+            screen.blit(img_in,(x,y))
 
 def NextMenuSelectScene():            #MODE : 1
     global MODE
@@ -41,31 +54,20 @@ def CookingMenuSelect():
         COOKMODE = 4
         print(COOKMODE)
 
-class Button():
-    def __init__(self, img_in, x, y, width, height, img_act, x_act, y_act, action=None):
-        mouse = pg.mouse.get_pos()
-        click = pg.mouse.get_pressed()
-        if x + width > mouse[0] > x and y + height > mouse[1] > y:
-            screen.blit(img_act,(x_act, y_act))
-            if click[0] and action != None:
-                time.sleep(0.1)
-                action()
-        else:
-            screen.blit(img_in,(x,y))
-
 def drawText(text, surface, x, y, font = FONT, color = BLACK):
     textObject = font.render(text, True, color)
     textRect = textObject.get_rect()
     textRect.topleft = (x,y)
     surface.blit(textObject, textRect)
     
-def Menu():
-    global MODE
-    screen.blit(pg.transform.scale(OPENINGTURNOFFIMG, [800,600]),[0,0])
-    current_Time = pg.time.get_ticks()
-    if current_Time > 2000:
+def Game():
+    global MODE, TIME
+    TIME = pg.time.get_ticks()
+    if TIME > 4800:
+        screen.blit(pg.transform.scale(OPENINGTURNOFFIMG, [800,600]),[0,0])
+    if TIME > 5000:
         screen.blit(pg.transform.scale(OPENINGIMG, [800,600]),[0,0])
-    if current_Time > 4000:
+    if TIME > 7000:
         menu_trans = pg.transform.scale(MENUSELECT, [330,110])
         menu_highlight_trans = pg.transform.scale(MENUSELECTHIGHLIGHT, [330,110])
         menu_select_trans = pg.transform.scale(GAMESTARTBUTTON, [200,50])
@@ -111,17 +113,33 @@ def Menu():
             Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50, 300, ThirdButtonSelectScene)
             Button(menu_highlight_trans, 420, 300, 330, 110, menu_highlight_trans, 420, 300, FourthButtonSelectScene)
             Button(pg.transform.scale(GAMESTARTBUTTON, [200,50]), 500, 450, 200, 50, pg.transform.scale(GAMESTARTBUTTONPRESSED, [200,50]), 500, 450, CookingMenuSelect)
-        
-        
-        
-        
-        
+
 def main():
-    while True:
+    max_num_hands = 1
+    mp_hands = mp.solutions.hands
+    mp_drawing = mp.solutions.drawing_utils
+    
+    hands = mp_hands.Hands(max_num_hands = max_num_hands,
+                           min_detection_confidence = 0.5,
+                           min_tracking_confidence = 0.5)
+    
+    cap = cv2.VideoCapture(0)
+    
+    while cap.isOpened():
+        success, image = cap.read()
+        if not success:
+            continue
+        image = cv2.flip(image, 1)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        
+        result = hands.process(image)
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        
+        Game()
+        
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 sys.exit()
-        Menu()
         pg.display.update()
 
 if __name__ == '__main__':
