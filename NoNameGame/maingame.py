@@ -1,5 +1,6 @@
 import pygame as pg
 import cv2, sys, random, time
+import numpy as np
 import mediapipe as mp
 from settings import *
 
@@ -122,6 +123,14 @@ def main():
     hands = mp_hands.Hands(max_num_hands = max_num_hands,
                            min_detection_confidence = 0.5,
                            min_tracking_confidence = 0.5)
+    
+    file = np.genfromtxt('data/gesture_train.txt', delimiter=',')
+    angle = file[:,:-1].astype(np.float32)
+    label = file[:,-1].astype(np.float32)
+    print(angle)
+    print(label)
+    knn = cv2.ml.KNearest_create()
+    knn.train(angle, cv2.ml.ROW_SAMPLE, label)
     
     cap = cv2.VideoCapture(0)
     
