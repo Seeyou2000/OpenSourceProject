@@ -3,7 +3,7 @@ import pygame as pg
 pg.init()
 
 # game options/settings/FONT
-TITLE = "COOKINGGAME"
+TITLE = "COOKINDOOR"
 WIDTH = 800
 HEIGHT = 600
 FPS = 60
