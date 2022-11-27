@@ -179,6 +179,8 @@ def main():
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
         game()
+        
+        #cv2.imshow('Game', image) #카메라 나오게하는 코드
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
