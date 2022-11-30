@@ -3,7 +3,6 @@ import cv2, sys, random, time
 import numpy as np
 import mediapipe as mp
 from settings import *
-from cookmode import *
 
 pg.init()
 pg.display.set_caption("COOKINDOOR")
@@ -33,7 +32,76 @@ class Button():
             screen.blit(img_in, (x, y))
 
 
-def backgroud(image):
+class Cookmode():
+    def __init__(self, COOKMODE, surface):
+        self.COOKMODE = COOKMODE
+        self.surface = surface
+        self.done = False
+        self.time = pg.time.Clock()
+        self.start_time = TIME  # 0
+        self.score = 100
+        self.timer = 0
+
+        if COOKMODE == 1:
+            self.fried_rice()
+        elif COOKMODE == 2:
+            self.jjajang()
+        elif COOKMODE == 3:
+            self.topped_rice()
+        elif COOKMODE == 4:
+            self.potato_pancake()
+
+    def caption_in(self, caption, font=FONT):
+        self.caption = font.render(caption, False, IVORY, BLACK)
+        self.surface.blit(self.caption, (400, 500))
+
+    def stir(self, caption):  # 재료만 변경 매개변수에 ingredient
+        # self.ingredient = ingredient  # 섞는 과정이 달라서
+        self.timer = 2000
+        print(self.start_time, 'abcd')
+        while TIME - self.start_time < self.timer:
+            background(STIR)
+            self.caption_in(caption)
+
+    def cut(self, timer, caption):  # 재료만 변경 매개변수에 ingredient
+        background(CUT)
+        self.caption_in(caption)
+
+    def micro(self, timer, caption):
+        background(MICRO)
+        self.caption_in(caption)
+
+    def pan(self, caption):
+        self.caption_in(caption)
+        self.timer = 5000  # 임시
+        pg.time.delay(self.timer)
+        background(PAN)
+
+    def pot(self, caption):
+        self.caption_in(caption)
+        self.timer = 2000  # 임시
+        background(POT)
+
+    def finish(self):
+        pass
+
+    def fried_rice(self):
+        self.stir(FRIEDRICE1)
+        self.cut(5000, FRIEDRICE2)
+        self.stir(FRIEDRICE3)
+        self.micro(5000, FRIEDRICE4)
+
+    def jjajang(self):
+        pass
+
+    def topped_rice(self):
+        pass
+
+    def potato_pancake(self):
+        pass
+
+
+def background(image):
     screen.blit(pg.transform.scale(image, (800, 600)), (0, 0))
 
 
@@ -93,9 +161,9 @@ def game():
     global MODE, TIME
     TIME = pg.time.get_ticks()
     if TIME > 4800:
-        backgroud(OPENINGTURNOFFIMG)
+        background(OPENINGTURNOFFIMG)
     if TIME > 5000:
-        backgroud(OPENINGIMG)
+        background(OPENINGIMG)
     if TIME > 7000:
         menu_trans = pg.transform.scale(MENUSELECT, [330, 110])
         menu_highlight_trans = pg.transform.scale(MENUSELECTHIGHLIGHT, [368, 145])
@@ -110,41 +178,45 @@ def game():
             draw_text("메뉴 선택", screen, 340, 320, FONT, BLACK)
         elif MODE == 1:
             screen.fill(IVORY)
-            Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50-18, 100-17, first_button_select_scene)
+            Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50 - 18, 100 - 17, first_button_select_scene)
             Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 402, 100 - 17, second_button_select_scene)
-            Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50-18, 300-17, third_button_select_scene)
-            Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420-18, 300-17, fourth_button_select_scene)
+            Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50 - 18, 300 - 17, third_button_select_scene)
+            Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420 - 18, 300 - 17, fourth_button_select_scene)
             screen.blit(menu_select_trans, [500, 450])
         elif MODE == 11:
             screen.fill(IVORY)
-            Button(menu_highlight_trans, 50-18, 100-17, 330, 110, menu_highlight_trans, 50-18, 100-17, next_menu_select_scene)
-            Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 420-18, 100-17, second_button_select_scene)
-            Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50-18, 300-17, third_button_select_scene)
-            Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420-18, 300-17, fourth_button_select_scene)
+            Button(menu_highlight_trans, 50 - 18, 100 - 17, 330, 110, menu_highlight_trans, 50 - 18, 100 - 17,
+                   next_menu_select_scene)
+            Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 420 - 18, 100 - 17, second_button_select_scene)
+            Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50 - 18, 300 - 17, third_button_select_scene)
+            Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420 - 18, 300 - 17, fourth_button_select_scene)
             Button(pg.transform.scale(GAMESTARTBUTTON, [200, 50]), 500, 450, 200, 50,
                    pg.transform.scale(GAMESTARTBUTTONPRESSED, [200, 50]), 500, 450, cooking_menu_select)
         elif MODE == 12:
             screen.fill(IVORY)
-            Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50-18, 100-17, first_button_select_scene)
-            Button(menu_highlight_trans, 420-18, 100-17, 330, 110, menu_highlight_trans, 420-18, 100-17, next_menu_select_scene)
-            Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50-18, 300-17, third_button_select_scene)
-            Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420-18, 300-17, fourth_button_select_scene)
+            Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50 - 18, 100 - 17, first_button_select_scene)
+            Button(menu_highlight_trans, 420 - 18, 100 - 17, 330, 110, menu_highlight_trans, 420 - 18, 100 - 17,
+                   next_menu_select_scene)
+            Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50 - 18, 300 - 17, third_button_select_scene)
+            Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420 - 18, 300 - 17, fourth_button_select_scene)
             Button(pg.transform.scale(GAMESTARTBUTTON, [200, 50]), 500, 450, 200, 50,
                    pg.transform.scale(GAMESTARTBUTTONPRESSED, [200, 50]), 500, 450, cooking_menu_select)
         elif MODE == 13:
             screen.fill(IVORY)
-            Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50-18, 100-17, first_button_select_scene)
-            Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 420-18, 100-17, second_button_select_scene)
-            Button(menu_highlight_trans, 50-18, 300-17, 330, 110, menu_highlight_trans, 50-18, 300-17, next_menu_select_scene)
-            Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420-18, 300-17, fourth_button_select_scene)
+            Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50 - 18, 100 - 17, first_button_select_scene)
+            Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 420 - 18, 100 - 17, second_button_select_scene)
+            Button(menu_highlight_trans, 50 - 18, 300 - 17, 330, 110, menu_highlight_trans, 50 - 18, 300 - 17,
+                   next_menu_select_scene)
+            Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420 - 18, 300 - 17, fourth_button_select_scene)
             Button(pg.transform.scale(GAMESTARTBUTTON, [200, 50]), 500, 450, 200, 50,
                    pg.transform.scale(GAMESTARTBUTTONPRESSED, [200, 50]), 500, 450, cooking_menu_select)
         elif MODE == 14:
             screen.fill(IVORY)
-            Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50-18, 100-17, first_button_select_scene)
-            Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 420-18, 100-17, next_menu_select_scene)
-            Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50-18, 300-17, third_button_select_scene)
-            Button(menu_highlight_trans, 420-18, 300-17, 330, 110, menu_highlight_trans, 420-18, 300-17, fourth_button_select_scene)
+            Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50 - 18, 100 - 17, first_button_select_scene)
+            Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 420 - 18, 100 - 17, next_menu_select_scene)
+            Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50 - 18, 300 - 17, third_button_select_scene)
+            Button(menu_highlight_trans, 420 - 18, 300 - 17, 330, 110, menu_highlight_trans, 420 - 18, 300 - 17,
+                   fourth_button_select_scene)
             Button(pg.transform.scale(GAMESTARTBUTTON, [200, 50]), 500, 450, 200, 50,
                    pg.transform.scale(GAMESTARTBUTTONPRESSED, [200, 50]), 500, 450, cooking_menu_select)
 
@@ -179,12 +251,13 @@ def main():
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
         game()
-        
-        #cv2.imshow('Game', image) #카메라 나오게하는 코드
+
+        # cv2.imshow('Game', image) #카메라 나오게하는 코드
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 sys.exit()
+        #함수 만들기 update
         pg.display.update()
 
 
