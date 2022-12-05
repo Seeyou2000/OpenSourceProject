@@ -34,7 +34,6 @@ class Button():
 
 class Cookmode():
     def __init__(self, COOKMODE, surface):
-        self.COOKMODE = COOKMODE
         self.surface = surface
         self.done = False
         self.time = pg.time.Clock()
@@ -57,11 +56,23 @@ class Cookmode():
 
     def stir(self, caption):  # 재료만 변경 매개변수에 ingredient
         # self.ingredient = ingredient  # 섞는 과정이 달라서
-        self.timer = 2000
-        print(self.start_time, 'abcd')
-        while TIME - self.start_time < self.timer:
-            background(STIR)
-            self.caption_in(caption)
+        #self.timer = 2000
+        background(STIR)
+        self.caption_in(caption)
+        
+        
+        self.blue_rect = pg.draw.rect(screen, (0, 0, 255), (200, 200, 200, 200))
+        if self.blue_rect.collidepoint(JOINTPOS):
+            if paper_motion() == True:
+                print("GOODBYE!")
+                global INGAMEMODE, MODE, COOKMODE
+                INGAMEMODE = 0
+                MODE = 0
+                COOKMODE = 0
+        #print(TIME - self.start_time, 'abcd')
+        #while TIME - self.start_time < self.timer:
+        #    background(STIR)
+        #    self.caption_in(caption)
 
     def cut(self, timer, caption):  # 재료만 변경 매개변수에 ingredient
         background(CUT)
@@ -87,18 +98,18 @@ class Cookmode():
 
     def fried_rice(self):
         self.stir(FRIEDRICE1)
-        self.cut(5000, FRIEDRICE2)
-        self.stir(FRIEDRICE3)
-        self.micro(5000, FRIEDRICE4)
+        #self.cut(5000, FRIEDRICE2)
+        #self.stir(FRIEDRICE3)
+        #self.micro(5000, FRIEDRICE4)
 
     def jjajang(self):
-        pass
+        self.stir(JJAJANG1)
 
     def topped_rice(self):
-        pass
+        self.stir(TOPPEDRICE1)
 
     def potato_pancake(self):
-        pass
+        self.stir(POTATOPANCAKE1)
 
 
 def background(image):
@@ -131,30 +142,54 @@ def fourth_button_select_scene():  # MODE : 14
 
 
 def cooking_menu_select():
-    global MODE, COOKMODE
+    global MODE, COOKMODE, INGAMEMODE
+    INGAMEMODE = 1
+    print(INGAMEMODE)
     if MODE == 11:
         COOKMODE = 1
-        Cookmode(1, screen)
-        print(COOKMODE)
     elif MODE == 12:
         COOKMODE = 2
-        Cookmode(2, screen)
-        print(COOKMODE)
     elif MODE == 13:
         COOKMODE = 3
-        Cookmode(3, screen)
-        print(COOKMODE)
     elif MODE == 14:
         COOKMODE = 4
-        Cookmode(4, screen)
-        print(COOKMODE)
-
+    print(COOKMODE)
+        
 
 def draw_text(text, surface, x, y, font=FONT, color=BLACK):
     text_object = font.render(text, True, color)
     text_rect = text_object.get_rect()
     text_rect.topleft = (x, y)
     surface.blit(text_object, text_rect)
+    
+
+def scissors_motion():
+    global BUFFER, IDX
+    if (BUFFER == 9 or BUFFER == 1 or BUFFER == 3) and (IDX == 6 or IDX == 5 or IDX == 0):
+        return True
+    else:
+        BUFFER = IDX
+        return False
+
+    
+def rock_motion():
+    global BUFFER, IDX
+    if (BUFFER == 5) and (IDX == 0 or IDX == 6):
+        return True
+    else:
+        print(BUFFER)
+        BUFFER = IDX
+        return False
+    
+
+def paper_motion():
+    global BUFFER, IDX
+    if (BUFFER == 0 or BUFFER == 6) and (IDX == 5):
+        return True
+    else:
+        BUFFER = IDX
+        print(BUFFER)
+        return False
 
 
 def game():
@@ -222,9 +257,13 @@ def game():
 
 
 def main():
+    global JOINTPOS, IDX
     max_num_hands = 1
     mp_hands = mp.solutions.hands
+    mp_drawing_styles = mp.solutions.drawing_styles
     mp_drawing = mp.solutions.drawing_utils
+    
+    rps_gesture = {6:'rock', 5:'paper', 9:'scissors', 1:'scissors', 0: 'rock', 3:'scissors'}
 
     hands = mp_hands.Hands(max_num_hands=max_num_hands,
                            min_detection_confidence=0.5,
@@ -233,8 +272,6 @@ def main():
     file = np.genfromtxt('data/gesture_train.txt', delimiter=',')
     angle = file[:, :-1].astype(np.float32)
     label = file[:, -1].astype(np.float32)
-    print(angle)
-    print(label)
     knn = cv2.ml.KNearest_create()
     knn.train(angle, cv2.ml.ROW_SAMPLE, label)
 
@@ -245,20 +282,75 @@ def main():
         if not success:
             continue
         image = cv2.flip(image, 1)
+        
+        image.flags.writeable = False
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-        result = hands.process(image)
+        results = hands.process(image)
+        
+        image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-        game()
-
-        # cv2.imshow('Game', image) #카메라 나오게하는 코드
-
+        
+        if INGAMEMODE == 0:
+            game()
+        if INGAMEMODE == 1:
+            Cookmode(COOKMODE, screen)
+        
+        if results.multi_hand_landmarks:
+            for hand_landmarks in results.multi_hand_landmarks:
+                
+                joint = np.zeros([21,3])
+                
+                for i, lm in enumerate(hand_landmarks.landmark):
+                    joint[i] = [lm.x, lm.y, lm.z]
+                
+                v1 = joint[[0,1,2,3,0,5,6,7,0,9,10,11,0,13,14,15,0,17,18,19],:]
+                v2 = joint[[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],:]
+                v = v2 - v1
+                v = v / np.linalg.norm(v, axis=1)[:, np.newaxis]
+                
+                angle = np.arccos(np.einsum('nt,nt->n',
+                    v[[0,1,2,4,5,6,8,9,10,12,13,14,16,17,18],:],
+                    v[[1,2,3,5,6,7,9,10,11,13,14,15,17,18,19],:]))
+                
+                angle = np.degrees(angle)
+                
+                data = np.array([angle], dtype=np.float32)
+                success, result, near, dist = knn.findNearest(data, 3)
+                IDX = int(result[0][0])
+                
+                if IDX in rps_gesture.keys():
+                    cv2.putText(image, text=rps_gesture[IDX].upper(), 
+                    org=(int(hand_landmarks.landmark[0].x * image.shape[1]), int(hand_landmarks.landmark[0].y * image.shape[0] + 20)), 
+                    fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(125,125,125), thickness=2)
+                    draw_text(str(IDX), screen, 230, 230, FONT , BLACK)
+                
+                px = joint[7][0] * (WIDTH) + 0
+                py = joint[7][1] * (HEIGHT) + 0
+                JOINTPOS = [px,py]
+                
+                if INGAMEMODE == 1:
+                    screen.blit(pg.transform.scale(NORMAL_POINTER, [79, 93]), JOINTPOS)
+                
+                
+                mp_drawing.draw_landmarks(
+                    image,
+                    hand_landmarks,
+                    mp_hands.HAND_CONNECTIONS,
+                    mp_drawing_styles.get_default_hand_landmarks_style(),
+                    mp_drawing_styles.get_default_hand_connections_style())
+        
+        #cv2.imshow('Game', image) #카메라 나오게하는 코드
+        
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 sys.exit()
+                
         #함수 만들기 update
         pg.display.update()
+        
+        if cv2.waitKey(1) == ord('q'):
+            break
+    cap.release()
 
 
 if __name__ == '__main__':
