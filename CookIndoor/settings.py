@@ -7,10 +7,14 @@ TITLE = "COOKINDOOR"
 WIDTH = 800
 HEIGHT = 600
 FPS = 60
+BUFFER = 10
+IDX = 15
 TIME = pg.time.get_ticks()
+JOINTPOS = [0,0]
 
 #display MODE
 MODE = 0
+INGAMEMODE = 0
 COOKMODE = 0
 #select FONT
 FONT = pg.font.Font('font/malgunbd.ttf', 25)
@@ -31,6 +35,9 @@ GAMESTARTBUTTON = pg.image.load('image/icon/game_start.png')
 GAMESTARTBUTTONPRESSED = pg.image.load('image/icon/game_start_press.png')
 MENUSELECT = pg.image.load('image/icon/menu_select.png')
 MENUSELECTHIGHLIGHT = pg.image.load('image/icon/menu_select_highlight.png')
+#image/pointer
+KNIFE = pg.image.load('image/pointer/knife_pointer.png')
+NORMAL_POINTER = pg.image.load('image/pointer/normal_pointer.png')
 
 
 # define colors
