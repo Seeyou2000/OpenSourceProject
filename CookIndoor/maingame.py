@@ -74,6 +74,10 @@ class Cookmode():
         #    background(STIR)
         #    self.caption_in(caption)
 
+    def caption_two(self, caption, font=FONT):
+        self.caption = font.render(caption, False, IVORY, BLACK)
+        self.surface.blit(self.caption, (100, 700))
+
     def cut(self, timer, caption):  # 재료만 변경 매개변수에 ingredient
         background(CUT)
         self.caption_in(caption)
@@ -81,9 +85,19 @@ class Cookmode():
     def micro(self, timer, caption):
         background(MICRO)
         self.caption_in(caption)
+        if self.done:
+            background(MICRO_FINISH)
+            pg.time.delay(1000)
 
-    def pan(self, caption):
+    def pan(self, caption): # 불 그림 3개 넣을거야
         self.caption_in(caption)
+        self.timer = 5000  # 임시
+        pg.time.delay(self.timer)
+        background(PAN)
+
+    def pan2(self, caption1, caption2):
+        self.caption_in(caption1)
+        self.caption_two(caption2)
         self.timer = 5000  # 임시
         pg.time.delay(self.timer)
         background(PAN)
@@ -94,22 +108,33 @@ class Cookmode():
         background(POT)
 
     def finish(self):
-        pass
+        background(SCORE)
 
     def fried_rice(self):
         self.stir(FRIEDRICE1)
-        #self.cut(5000, FRIEDRICE2)
-        #self.stir(FRIEDRICE3)
-        #self.micro(5000, FRIEDRICE4)
+        self.cut(5000, FRIEDRICE2)
+        self.stir(FRIEDRICE3)
+        self.micro(5000, FRIEDRICE4)
+        self.finish()
 
     def jjajang(self):
         self.stir(JJAJANG1)
+        self.micro(5000, JJAJANG2)
+        self.stir(JJAJANG3)
+        self.micro(5000, JJAJANG4)
+        self.finish()
 
     def topped_rice(self):
-        self.stir(TOPPEDRICE1)
+        self.cut(5000, TOPPEDRICE1)
+        self.cut(5000, TOPPEDRICE2)
+        self.pan(TOPPEDRICE3)
+        self.pot(TOPPEDRICE4)
+        self.finish()
 
     def potato_pancake(self):
-        self.stir(POTATOPANCAKE1)
+        self.cut(5000, POTATOPANCAKE1)
+        self.pan2(POTATOPANCAKE2, POTATOPANCAKE3)
+        self.finish()
 
 
 def background(image):
