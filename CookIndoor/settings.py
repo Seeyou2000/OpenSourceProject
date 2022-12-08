@@ -27,6 +27,7 @@ STARTIMG = pg.image.load('image/background/start.png')
 STIR = pg.image.load('image/background/stir_background.png')
 CUT = pg.image.load('image/background/stir_background.png')
 MICRO = pg.image.load('image/background/micro_background.png')
+MICRO_FINISH = pg.image.load('image/background/micro_background_finish.png')
 POT = pg.image.load('image/background/pot_background.png')
 PAN = pg.image.load('image/background/pan_background.png')
 SCORE = pg.image.load('image/background/score_background.png')
@@ -38,6 +39,11 @@ MENUSELECTHIGHLIGHT = pg.image.load('image/icon/menu_select_highlight.png')
 #image/pointer
 KNIFE = pg.image.load('image/pointer/knife_pointer.png')
 NORMAL_POINTER = pg.image.load('image/pointer/normal_pointer.png')
+#image/dish
+FRIED_RICE = pg.image.load('image/dish/fried_rice.png')
+JJAJANG = pg.image.load('image/dish/jjajang.png')
+TOPPED_RICE = pg.image.load('image/dish/topped_rice.png')
+POTATO_PANCAKE = pg.image.load('image/dish/potato_pancake.png')
 
 
 # define colors
@@ -47,6 +53,28 @@ GRAY = (196,199,208)
 BLACK = (0,0,0)
 IVORY = (247,247,247)
 
+# explanation of recipe
+# fried_rice
+FRIEDRICE_NAME = '고추장볶음밥'
+FRIEDRICE_INGREDIENT = '재료 : 밥(1공기), 참치(1캔), 양파(1/4개)'
+FRIEDRICE_SEASONING = ' 밥양념 : 마요네즈 1T, 식용유 1T / 참치양념 : 고추장 3T, 케찹 2T, 설탕 0.5T'
+FRIEDRICE_ETC = '1인분, 10분 이내로 완성'
+
+# jjajang
+JJAJANG_NAME = '짜파게티범벅'
+JJAJANG_INGREDIENT = '재료 : 라면사리 1개, 짜장가루 5T, 물 400ml'
+JJAJANG_ETC = '1인분, 5분 이내로 완성'
+
+# topped_rice
+TOPPEDRICE_NAME = '부대덮밥'
+TOPPEDRICE_INGREDIENT = '재료 : 비엔나 소시지 8알, 스팸 작은 캔 1/3개, 대파, 체다치즈 1/2장'
+TOPPEDRICE_SEASONING = '양념 : 물 100ml(1/2컵), 고추장 1/2T, 고춧가루 1/2T, 다진 마늘 1/2T'
+TOPPEDRICE_ETC = '1인분, 30분 이내로 완성'
+
+# potato_pancake
+POTATOPANCAKE_NAME = '감자전'
+POTATOPANCAKE_INGREDIENT = '감자 2개, 식용유, 밀가루 1T'
+POTATOPANCAKE_ETC = '1인분, 30분 이내로 완성'
 
 # captions of recipe
 # fried_rice
@@ -70,3 +98,4 @@ TOPPEDRICE4 = '양념, 물, 체다치즈 반 장을 넣고 끓여줍니다. 물�
 # potato_pancake
 POTATOPANCAKE1 = '감자 2개를 채썰어준다.'
 POTATOPANCAKE2 = '팬에 기름을 두르고 약불에서 감자를 얹어줍니다.'
+POTATOPANCAKE3 = 'TIP : 밀가루를 넣으면 서로 들러붙지 않아요. 여유가 된다면 같이 넣어줍니다.'
