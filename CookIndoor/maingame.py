@@ -4,6 +4,18 @@ import numpy as np
 import mediapipe as mp
 from settings import *
 
+#종료시 초기화 시켜야되는것들
+#global INGAMEMODE, MODE, COOKMODE
+#INGAMEMODE = 0
+#MODE = 0
+#COOKMODE = 0
+#STIR_OUT = False
+#MICRO_DONE = False
+#CUT_OUT = False
+#ISCUT = False
+#NUMBER_OF_CUT_INGREDIENTS = 1
+#STIR_COUNT = 0
+
 pg.init()
 pg.display.set_caption("COOKINDOOR")
 screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -35,11 +47,6 @@ class Button():
 class Cookmode():
     def __init__(self, COOKMODE, surface):
         self.surface = surface
-        self.done = False
-        self.time = pg.time.Clock()
-        self.start_time = TIME  # 0
-        self.score = 100
-        self.timer = 0
 
         if COOKMODE == 1:
             self.fried_rice()
@@ -52,89 +59,164 @@ class Cookmode():
 
     def caption_in(self, caption, font=FONT):
         self.caption = font.render(caption, False, IVORY, BLACK)
-        self.surface.blit(self.caption, (400, 500))
+        self.surface.blit(self.caption, (100, 500))
 
     def stir(self, caption):  # 재료만 변경 매개변수에 ingredient
-        # self.ingredient = ingredient  # 섞는 과정이 달라서
-        #self.timer = 2000
+        global STIR_OUT, MAKEUPMODE, STIR_COUNT
+        
         background(STIR)
         self.caption_in(caption)
         
-        
-        self.blue_rect = pg.draw.rect(screen, (0, 0, 255), (200, 200, 200, 200))
-        if self.blue_rect.collidepoint(JOINTPOS):
-            if paper_motion() == True:
-                print("GOODBYE!")
-                global INGAMEMODE, MODE, COOKMODE
-                INGAMEMODE = 0
-                MODE = 0
-                COOKMODE = 0
-        #print(TIME - self.start_time, 'abcd')
-        #while TIME - self.start_time < self.timer:
-        #    background(STIR)
-        #    self.caption_in(caption)
+        self.stir_ground = pg.Rect((200, 0, 400, 200))
+        if self.stir_ground.collidepoint(JOINTPOS) and IDX == 0:
+            background(STIR_GIF[STIR_COUNT])
+            STIR_COUNT += 1
+            if STIR_COUNT >= 60:
+                STIR_COUNT = 0
+            STIR_OUT = True
+        if JOINTPOS[1] > 200:
+            STIR_OUT = False
+        if (JOINTPOS[0] < 200 or JOINTPOS[0] > 600) and STIR_OUT and IDX == 0:
+            time.sleep(1)
+            STIR_COUNT = 0
+            MAKEUPMODE += 1
 
     def caption_two(self, caption, font=FONT):
         self.caption = font.render(caption, False, IVORY, BLACK)
         self.surface.blit(self.caption, (100, 700))
 
-    def cut(self, timer, caption):  # 재료만 변경 매개변수에 ingredient
+    def cut(self, caption):  # 재료만 변경 매개변수에 ingredient
+        global CUT_OUT, MAKEUPMODE, NUMBER_OF_CUT_INGREDIENTS, ISCUT
+        
+        ISCUT = True
         background(CUT)
         self.caption_in(caption)
+        
+        if COOKMODE == 1:
+            self.onion_ground = pg.Rect((350, 200, 200, 200))
+            if NUMBER_OF_CUT_INGREDIENTS == 1:
+                self.surface.blit(ONION_1, [350,200])
+            if NUMBER_OF_CUT_INGREDIENTS == 2:
+                self.surface.blit(ONION_2, [350,200])
+            if NUMBER_OF_CUT_INGREDIENTS == 3:
+                self.surface.blit(ONION_3, [350,200])
+            if self.onion_ground.collidepoint(JOINTPOS) and (IDX == 9 or IDX == 3 or IDX == 1):
+                CUT_OUT = True
+            if (JOINTPOS[1] > 400 or JOINTPOS[1] < 200) and CUT_OUT and(IDX == 9 or IDX == 3 or IDX == 1):
+                NUMBER_OF_CUT_INGREDIENTS += 1
+                time.sleep(1)
+                CUT_OUT = False
+                if NUMBER_OF_CUT_INGREDIENTS > 3:
+                    ISCUT = False
+                    MAKEUPMODE += 1
+                    
+        if COOKMODE == 3:
+            self.sausage_ground = pg.Rect((350, 250, 200, 100))
+            if NUMBER_OF_CUT_INGREDIENTS == 1:
+                self.surface.blit(SAUSAGE_1, [350,250])
+            if NUMBER_OF_CUT_INGREDIENTS == 2:
+                self.surface.blit(SAUSAGE_2, [350,250])
+            if NUMBER_OF_CUT_INGREDIENTS == 3:
+                self.surface.blit(SAUSAGE_3, [350,250])
+            if self.sausage_ground.collidepoint(JOINTPOS) and (IDX == 9 or IDX == 3 or IDX == 1):
+                CUT_OUT = True
+            if (JOINTPOS[1] > 350 or JOINTPOS[1] < 250) and CUT_OUT and (IDX == 9 or IDX == 3 or IDX == 1):
+                NUMBER_OF_CUT_INGREDIENTS += 1
+                time.sleep(1)
+                CUT_OUT = False
+                if NUMBER_OF_CUT_INGREDIENTS > 3:
+                    ISCUT = False
+                    MAKEUPMODE += 1
+        
+        if COOKMODE == 4:
+            self.potato_ground = pg.Rect((350, 200, 200, 200))
+            self.idx = NUMBER_OF_CUT_INGREDIENTS
+            if NUMBER_OF_CUT_INGREDIENTS == self.idx:
+                self.surface.blit(POTATO_CUT[self.idx - 1], [350,200])
+            if self.potato_ground.collidepoint(JOINTPOS) and (IDX == 9 or IDX == 3 or IDX == 1):
+                CUT_OUT = True
+            if (JOINTPOS[1] > 400 or JOINTPOS[1] < 200) and CUT_OUT and (IDX == 9 or IDX == 3 or IDX == 1):
+                NUMBER_OF_CUT_INGREDIENTS += 1
+                time.sleep(1)
+                CUT_OUT = False
+                if NUMBER_OF_CUT_INGREDIENTS > 14:
+                    ISCUT = False
+                    MAKEUPMODE += 1
 
-    def micro(self, timer, caption):
+    def micro(self, caption):
+        global MICRO_DONE, MAKEUPMODE
+        
         background(MICRO)
-        self.caption_in(caption)
-        if self.done:
+        #self.micro_ground = pg.draw.rect(self.surface, BLACK, (200,150,400,300))
+        self.micro_ground = pg.Rect((200,150,400,300))
+        if self.micro_ground.collidepoint(JOINTPOS) and rock_motion():
+            MICRO_DONE = True
             background(MICRO_FINISH)
-            pg.time.delay(1000)
+        if MICRO_DONE and IDX == 5:
+            time.sleep(1)
+            MAKEUPMODE += 1
+            
+        self.caption_in(caption)
 
     def pan(self, caption): # 불 그림 3개 넣을거야
         self.caption_in(caption)
-        self.timer = 5000  # 임시
-        pg.time.delay(self.timer)
         background(PAN)
 
     def pan2(self, caption1, caption2):
         self.caption_in(caption1)
         self.caption_two(caption2)
-        self.timer = 5000  # 임시
-        pg.time.delay(self.timer)
         background(PAN)
 
     def pot(self, caption):
         self.caption_in(caption)
-        self.timer = 2000  # 임시
         background(POT)
 
     def finish(self):
         background(SCORE)
 
     def fried_rice(self):
-        self.stir(FRIEDRICE1)
-        self.cut(5000, FRIEDRICE2)
-        self.stir(FRIEDRICE3)
-        self.micro(5000, FRIEDRICE4)
-        self.finish()
+        if MAKEUPMODE == 1:
+            self.stir(FRIEDRICE1)
+        elif MAKEUPMODE == 2:
+            self.cut(FRIEDRICE2)
+        elif MAKEUPMODE == 3:
+            self.stir(FRIEDRICE3)
+        elif MAKEUPMODE == 4:
+            self.micro(FRIEDRICE4)
+        else:
+            self.finish()
 
     def jjajang(self):
-        self.stir(JJAJANG1)
-        self.micro(5000, JJAJANG2)
-        self.stir(JJAJANG3)
-        self.micro(5000, JJAJANG4)
-        self.finish()
+        if MAKEUPMODE == 1:
+            self.stir(JJAJANG1)
+        elif MAKEUPMODE == 2:
+            self.micro(JJAJANG2)
+        elif MAKEUPMODE == 3:
+            self.stir(JJAJANG3)
+        elif MAKEUPMODE == 4:
+            self.micro(JJAJANG4)
+        else:
+            self.finish()
 
     def topped_rice(self):
-        self.cut(5000, TOPPEDRICE1)
-        self.cut(5000, TOPPEDRICE2)
-        self.pan(TOPPEDRICE3)
-        self.pot(TOPPEDRICE4)
-        self.finish()
+        if MAKEUPMODE == 1:
+            self.cut(TOPPEDRICE1)
+        elif MAKEUPMODE == 2:
+            self.cut(TOPPEDRICE2)
+        elif MAKEUPMODE == 3:
+            self.pan(TOPPEDRICE3)
+        elif MAKEUPMODE == 4:
+            self.pot(TOPPEDRICE4)
+        else:
+            self.finish()
 
     def potato_pancake(self):
-        self.cut(5000, POTATOPANCAKE1)
-        self.pan2(POTATOPANCAKE2, POTATOPANCAKE3)
-        self.finish()
+        if MAKEUPMODE == 1:
+            self.cut(POTATOPANCAKE1)
+        elif MAKEUPMODE == 2:
+            self.pan2(POTATOPANCAKE2, POTATOPANCAKE3)
+        else:
+            self.finish()
 
 
 def background(image):
@@ -239,50 +321,130 @@ def game():
         elif MODE == 1:
             screen.fill(IVORY)
             Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50 - 18, 100 - 17, first_button_select_scene)
+            draw_text(FRIEDRICE_NAME, screen, 160, 110, MENUFONTBIG, BLACK)
+            draw_text(FRIEDRICE_INGREDIENT, screen, 60, 130, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_SEASONING1, screen, 60, 150, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_SEASONING2, screen, 60, 170, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_ETC, screen, 60, 190, MENUFONTSMALL, BLACK)
             Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 402, 100 - 17, second_button_select_scene)
+            draw_text(JJAJANG_NAME, screen, 530, 110, MENUFONTBIG, BLACK)
+            draw_text(JJAJANG_INGREDIENT, screen, 430, 130, MENUFONTSMALL, BLACK)
+            draw_text(JJAJANG_ETC, screen, 430, 150, MENUFONTSMALL, BLACK)
             Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50 - 18, 300 - 17, third_button_select_scene)
+            draw_text(TOPPEDRICE_NAME, screen, 160, 310, MENUFONTBIG, BLACK)
+            draw_text(TOPPEDRICE_INGREDIENT, screen, 55, 330, MENUFONTSMALL, BLACK)
+            draw_text(TOPPEDRICE_SEASONING, screen, 55, 350, MENUFONTSMALL, BLACK)
+            draw_text(TOPPEDRICE_ETC, screen, 55, 370, MENUFONTSMALL, BLACK)
             Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420 - 18, 300 - 17, fourth_button_select_scene)
+            draw_text(POTATOPANCAKE_NAME, screen, 530, 310, MENUFONTBIG, BLACK)
+            draw_text(POTATOPANCAKE_INGREDIENT, screen, 430, 330, MENUFONTSMALL, BLACK)
+            draw_text(POTATOPANCAKE_ETC, screen, 430, 350, MENUFONTSMALL, BLACK)
             screen.blit(menu_select_trans, [500, 450])
+            draw_text("게임 시작하기", screen, 550, 465, MENUFONTBIG, BLACK)
         elif MODE == 11:
             screen.fill(IVORY)
             Button(menu_highlight_trans, 50 - 18, 100 - 17, 330, 110, menu_highlight_trans, 50 - 18, 100 - 17,
                    next_menu_select_scene)
+            draw_text(FRIEDRICE_NAME, screen, 160, 110, MENUFONTBIG, BLACK)
+            draw_text(FRIEDRICE_INGREDIENT, screen, 60, 130, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_SEASONING1, screen, 60, 150, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_SEASONING2, screen, 60, 170, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_ETC, screen, 60, 190, MENUFONTSMALL, BLACK)
             Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 420 - 18, 100 - 17, second_button_select_scene)
+            draw_text(JJAJANG_NAME, screen, 530, 110, MENUFONTBIG, BLACK)
+            draw_text(JJAJANG_INGREDIENT, screen, 430, 130, MENUFONTSMALL, BLACK)
+            draw_text(JJAJANG_ETC, screen, 430, 150, MENUFONTSMALL, BLACK)
             Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50 - 18, 300 - 17, third_button_select_scene)
+            draw_text(TOPPEDRICE_NAME, screen, 160, 310, MENUFONTBIG, BLACK)
+            draw_text(TOPPEDRICE_INGREDIENT, screen, 55, 330, MENUFONTSMALL, BLACK)
+            draw_text(TOPPEDRICE_SEASONING, screen, 55, 350, MENUFONTSMALL, BLACK)
+            draw_text(TOPPEDRICE_ETC, screen, 55, 370, MENUFONTSMALL, BLACK)
             Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420 - 18, 300 - 17, fourth_button_select_scene)
+            draw_text(POTATOPANCAKE_NAME, screen, 530, 310, MENUFONTBIG, BLACK)
+            draw_text(POTATOPANCAKE_INGREDIENT, screen, 430, 330, MENUFONTSMALL, BLACK)
+            draw_text(POTATOPANCAKE_ETC, screen, 430, 350, MENUFONTSMALL, BLACK)
             Button(pg.transform.scale(GAMESTARTBUTTON, [200, 50]), 500, 450, 200, 50,
                    pg.transform.scale(GAMESTARTBUTTONPRESSED, [200, 50]), 500, 450, cooking_menu_select)
+            draw_text("게임 시작하기", screen, 550, 465, MENUFONTBIG, BLACK)
         elif MODE == 12:
             screen.fill(IVORY)
             Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50 - 18, 100 - 17, first_button_select_scene)
+            draw_text(FRIEDRICE_NAME, screen, 160, 110, MENUFONTBIG, BLACK)
+            draw_text(FRIEDRICE_INGREDIENT, screen, 60, 130, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_SEASONING1, screen, 60, 150, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_SEASONING2, screen, 60, 170, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_ETC, screen, 60, 190, MENUFONTSMALL, BLACK)
             Button(menu_highlight_trans, 420 - 18, 100 - 17, 330, 110, menu_highlight_trans, 420 - 18, 100 - 17,
                    next_menu_select_scene)
+            draw_text(JJAJANG_NAME, screen, 530, 110, MENUFONTBIG, BLACK)
+            draw_text(JJAJANG_INGREDIENT, screen, 430, 130, MENUFONTSMALL, BLACK)
+            draw_text(JJAJANG_ETC, screen, 430, 150, MENUFONTSMALL, BLACK)
             Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50 - 18, 300 - 17, third_button_select_scene)
+            draw_text(TOPPEDRICE_NAME, screen, 160, 310, MENUFONTBIG, BLACK)
+            draw_text(TOPPEDRICE_INGREDIENT, screen, 55, 330, MENUFONTSMALL, BLACK)
+            draw_text(TOPPEDRICE_SEASONING, screen, 55, 350, MENUFONTSMALL, BLACK)
+            draw_text(TOPPEDRICE_ETC, screen, 55, 370, MENUFONTSMALL, BLACK)
             Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420 - 18, 300 - 17, fourth_button_select_scene)
+            draw_text(POTATOPANCAKE_NAME, screen, 530, 310, MENUFONTBIG, BLACK)
+            draw_text(POTATOPANCAKE_INGREDIENT, screen, 430, 330, MENUFONTSMALL, BLACK)
+            draw_text(POTATOPANCAKE_ETC, screen, 430, 350, MENUFONTSMALL, BLACK)
             Button(pg.transform.scale(GAMESTARTBUTTON, [200, 50]), 500, 450, 200, 50,
                    pg.transform.scale(GAMESTARTBUTTONPRESSED, [200, 50]), 500, 450, cooking_menu_select)
+            draw_text("게임 시작하기", screen, 550, 465, MENUFONTBIG, BLACK)
         elif MODE == 13:
             screen.fill(IVORY)
             Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50 - 18, 100 - 17, first_button_select_scene)
+            draw_text(FRIEDRICE_NAME, screen, 160, 110, MENUFONTBIG, BLACK)
+            draw_text(FRIEDRICE_INGREDIENT, screen, 60, 130, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_SEASONING1, screen, 60, 150, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_SEASONING2, screen, 60, 170, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_ETC, screen, 60, 190, MENUFONTSMALL, BLACK)
             Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 420 - 18, 100 - 17, second_button_select_scene)
+            draw_text(JJAJANG_NAME, screen, 530, 110, MENUFONTBIG, BLACK)
+            draw_text(JJAJANG_INGREDIENT, screen, 430, 130, MENUFONTSMALL, BLACK)
+            draw_text(JJAJANG_ETC, screen, 430, 150, MENUFONTSMALL, BLACK)
             Button(menu_highlight_trans, 50 - 18, 300 - 17, 330, 110, menu_highlight_trans, 50 - 18, 300 - 17,
                    next_menu_select_scene)
+            draw_text(TOPPEDRICE_NAME, screen, 160, 310, MENUFONTBIG, BLACK)
+            draw_text(TOPPEDRICE_INGREDIENT, screen, 55, 330, MENUFONTSMALL, BLACK)
+            draw_text(TOPPEDRICE_SEASONING, screen, 55, 350, MENUFONTSMALL, BLACK)
+            draw_text(TOPPEDRICE_ETC, screen, 55, 370, MENUFONTSMALL, BLACK)
             Button(menu_trans, 420, 300, 330, 110, menu_highlight_trans, 420 - 18, 300 - 17, fourth_button_select_scene)
+            draw_text(POTATOPANCAKE_NAME, screen, 530, 310, MENUFONTBIG, BLACK)
+            draw_text(POTATOPANCAKE_INGREDIENT, screen, 430, 330, MENUFONTSMALL, BLACK)
+            draw_text(POTATOPANCAKE_ETC, screen, 430, 350, MENUFONTSMALL, BLACK)
             Button(pg.transform.scale(GAMESTARTBUTTON, [200, 50]), 500, 450, 200, 50,
                    pg.transform.scale(GAMESTARTBUTTONPRESSED, [200, 50]), 500, 450, cooking_menu_select)
+            draw_text("게임 시작하기", screen, 550, 465, MENUFONTBIG, BLACK)
         elif MODE == 14:
             screen.fill(IVORY)
             Button(menu_trans, 50, 100, 330, 110, menu_highlight_trans, 50 - 18, 100 - 17, first_button_select_scene)
+            draw_text(FRIEDRICE_NAME, screen, 160, 110, MENUFONTBIG, BLACK)
+            draw_text(FRIEDRICE_INGREDIENT, screen, 60, 130, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_SEASONING1, screen, 60, 150, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_SEASONING2, screen, 60, 170, MENUFONTSMALL, BLACK)
+            draw_text(FRIEDRICE_ETC, screen, 60, 190, MENUFONTSMALL, BLACK)
             Button(menu_trans, 420, 100, 330, 110, menu_highlight_trans, 420 - 18, 100 - 17, next_menu_select_scene)
+            draw_text(JJAJANG_NAME, screen, 530, 110, MENUFONTBIG, BLACK)
+            draw_text(JJAJANG_INGREDIENT, screen, 430, 130, MENUFONTSMALL, BLACK)
+            draw_text(JJAJANG_ETC, screen, 430, 150, MENUFONTSMALL, BLACK)
             Button(menu_trans, 50, 300, 330, 110, menu_highlight_trans, 50 - 18, 300 - 17, third_button_select_scene)
+            draw_text(TOPPEDRICE_NAME, screen, 160, 310, MENUFONTBIG, BLACK)
+            draw_text(TOPPEDRICE_INGREDIENT, screen, 55, 330, MENUFONTSMALL, BLACK)
+            draw_text(TOPPEDRICE_SEASONING, screen, 55, 350, MENUFONTSMALL, BLACK)
+            draw_text(TOPPEDRICE_ETC, screen, 55, 370, MENUFONTSMALL, BLACK)
             Button(menu_highlight_trans, 420 - 18, 300 - 17, 330, 110, menu_highlight_trans, 420 - 18, 300 - 17,
                    fourth_button_select_scene)
+            draw_text(POTATOPANCAKE_NAME, screen, 530, 310, MENUFONTBIG, BLACK)
+            draw_text(POTATOPANCAKE_INGREDIENT, screen, 430, 330, MENUFONTSMALL, BLACK)
+            draw_text(POTATOPANCAKE_ETC, screen, 430, 350, MENUFONTSMALL, BLACK)
             Button(pg.transform.scale(GAMESTARTBUTTON, [200, 50]), 500, 450, 200, 50,
                    pg.transform.scale(GAMESTARTBUTTONPRESSED, [200, 50]), 500, 450, cooking_menu_select)
+            draw_text("게임 시작하기", screen, 550, 465, MENUFONTBIG, BLACK)
 
 
 def main():
-    global JOINTPOS, IDX
+    global JOINTPOS, IDX, ISCUT
     max_num_hands = 1
     mp_hands = mp.solutions.hands
     mp_drawing_styles = mp.solutions.drawing_styles
@@ -354,7 +516,10 @@ def main():
                 JOINTPOS = [px,py]
                 
                 if INGAMEMODE == 1:
-                    screen.blit(pg.transform.scale(NORMAL_POINTER, [79, 93]), JOINTPOS)
+                    if not ISCUT:
+                        screen.blit(pg.transform.scale(NORMAL_POINTER, [79, 93]), JOINTPOS)
+                    else:
+                        screen.blit(pg.transform.scale(KNIFE_POINTER, [79, 93]), JOINTPOS)
                 
                 
                 mp_drawing.draw_landmarks(
