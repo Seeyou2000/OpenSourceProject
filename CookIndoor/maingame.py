@@ -9,11 +9,16 @@ from settings import *
 #INGAMEMODE = 0
 #MODE = 0
 #COOKMODE = 0
+#MAKEUPMODE = 1
+#ENDMODE = 0
 #STIR_OUT = False
 #MICRO_DONE = False
 #CUT_OUT = False
 #ISCUT = False
+#ISPOT = False
+#PAN_OUT = False
 #NUMBER_OF_CUT_INGREDIENTS = 1
+#NUMBER_OF_PAN_INGREDIENTS = 1
 #STIR_COUNT = 0
 
 pg.init()
@@ -108,9 +113,29 @@ class Cookmode():
                 CUT_OUT = False
                 if NUMBER_OF_CUT_INGREDIENTS > 3:
                     ISCUT = False
+                    NUMBER_OF_CUT_INGREDIENTS = 1
                     MAKEUPMODE += 1
                     
-        if COOKMODE == 3:
+        if COOKMODE == 3 and MAKEUPMODE == 1:
+            self.green_onion_ground = pg.Rect((350, 250, 200, 100))
+            if NUMBER_OF_CUT_INGREDIENTS == 1:
+                self.surface.blit(GREEN_ONION_1, [350,200])
+            if NUMBER_OF_CUT_INGREDIENTS == 2:
+                self.surface.blit(GREEN_ONION_2, [350,200])
+            if NUMBER_OF_CUT_INGREDIENTS == 3:
+                self.surface.blit(GREEN_ONION_3, [350,200])
+            if self.green_onion_ground.collidepoint(JOINTPOS) and (IDX == 9 or IDX == 3 or IDX == 1):
+                CUT_OUT = True
+            if (JOINTPOS[1] > 400 or JOINTPOS[1] < 200) and CUT_OUT and(IDX == 9 or IDX == 3 or IDX == 1):
+                NUMBER_OF_CUT_INGREDIENTS += 1
+                time.sleep(1)
+                CUT_OUT = False
+                if NUMBER_OF_CUT_INGREDIENTS > 3:
+                    ISCUT = False
+                    NUMBER_OF_CUT_INGREDIENTS = 1
+                    MAKEUPMODE += 1
+                    
+        if COOKMODE == 3 and MAKEUPMODE == 2:
             self.sausage_ground = pg.Rect((350, 250, 200, 100))
             if NUMBER_OF_CUT_INGREDIENTS == 1:
                 self.surface.blit(SAUSAGE_1, [350,250])
@@ -126,6 +151,7 @@ class Cookmode():
                 CUT_OUT = False
                 if NUMBER_OF_CUT_INGREDIENTS > 3:
                     ISCUT = False
+                    NUMBER_OF_CUT_INGREDIENTS = 1
                     MAKEUPMODE += 1
         
         if COOKMODE == 4:
@@ -141,12 +167,14 @@ class Cookmode():
                 CUT_OUT = False
                 if NUMBER_OF_CUT_INGREDIENTS > 14:
                     ISCUT = False
+                    NUMBER_OF_CUT_INGREDIENTS = 1
                     MAKEUPMODE += 1
 
     def micro(self, caption):
         global MICRO_DONE, MAKEUPMODE
         
         background(MICRO)
+        self.caption_in(caption)
         #self.micro_ground = pg.draw.rect(self.surface, BLACK, (200,150,400,300))
         self.micro_ground = pg.Rect((200,150,400,300))
         if self.micro_ground.collidepoint(JOINTPOS) and rock_motion():
@@ -158,22 +186,86 @@ class Cookmode():
             
         self.caption_in(caption)
 
-    def pan(self, caption): # 불 그림 3개 넣을거야
-        self.caption_in(caption)
+    def pan(self, caption):
+        global NUMBER_OF_PAN_INGREDIENTS, PAN_OUT, MAKEUPMODE
         background(PAN)
-
+        self.caption_in(caption)
+        
+        if COOKMODE == 3:
+            self.surface.blit(FRYINGPAN, [150,100])
+            self.pan_handle = pg.Rect((100,250,200,100))
+            if NUMBER_OF_PAN_INGREDIENTS == 1:
+                self.surface.blit(BBOKEUM_1,[300,200])
+            if NUMBER_OF_PAN_INGREDIENTS == 2:
+                self.surface.blit(BBOKEUM_2,[300,200])
+            if NUMBER_OF_PAN_INGREDIENTS == 3:
+                self.surface.blit(BBOKEUM_3,[300,200])
+            if self.pan_handle.collidepoint(JOINTPOS) and (IDX == 0 or IDX == 6):
+                PAN_OUT = True
+            if (JOINTPOS[1] > 350 or JOINTPOS[1] < 250) and PAN_OUT and (IDX == 0 or IDX == 6):
+                NUMBER_OF_PAN_INGREDIENTS += 1
+                time.sleep(1)
+                PAN_OUT = False
+                if NUMBER_OF_PAN_INGREDIENTS > 3:
+                    NUMBER_OF_PAN_INGREDIENTS = 1
+                    MAKEUPMODE += 1
+                
     def pan2(self, caption1, caption2):
+        global NUMBER_OF_PAN_INGREDIENTS, PAN_OUT, MAKEUPMODE
+        
+        background(PAN)
         self.caption_in(caption1)
         self.caption_two(caption2)
-        background(PAN)
+        
+        if COOKMODE == 4:
+            self.surface.blit(FRYINGPAN, [150,100])
+            self.pan_handle = pg.Rect((100,250,200,100))
+            self.idx = NUMBER_OF_PAN_INGREDIENTS
+            if NUMBER_OF_PAN_INGREDIENTS == self.idx:
+                self.surface.blit(POTATO_PAN[self.idx - 1], [300,200])
+            if self.pan_handle.collidepoint(JOINTPOS) and (IDX == 0 or IDX == 6):
+                PAN_OUT = True
+            if (JOINTPOS[1] > 350 or JOINTPOS[1] < 250) and PAN_OUT and (IDX == 0 or IDX == 6):
+                NUMBER_OF_PAN_INGREDIENTS += 1
+                time.sleep(1)
+                PAN_OUT = False
+                if NUMBER_OF_PAN_INGREDIENTS > 14:
+                    NUMBER_OF_PAN_INGREDIENTS = 1
+                    MAKEUPMODE += 1
 
     def pot(self, caption):
+        global MAKEUPMODE, ISPOT
         self.caption_in(caption)
         background(POT)
-
+        if COOKMODE == 3:
+            for idx in range(0,3):
+                self.surface.blit(FIRE[idx], [300,350 - 10*idx])
+                pg.display.update()
+                pg.time.delay(2000)
+            MAKEUPMODE += 1
+                
     def finish(self):
+        global ENDMODE
+        ENDMODE = 1
         background(SCORE)
-
+        
+        Button(pg.transform.scale(GAMESTARTBUTTON, [200, 50]), 550, 350, 200, 50,
+                   pg.transform.scale(GAMESTARTBUTTONPRESSED, [200, 50]), 550, 350, end)
+        draw_text("게임 종료하기", screen, 600, 365, MENUFONTBIG, BLACK)
+        
+        Button(pg.transform.scale(GAMESTARTBUTTON, [200, 50]), 550, 450, 200, 50,
+                   pg.transform.scale(GAMESTARTBUTTONPRESSED, [200, 50]), 550, 450, reset)
+        draw_text("게임 다시하기", screen, 600, 465, MENUFONTBIG, BLACK)
+        
+        if COOKMODE == 1:
+            self.surface.blit(FRIED_RICE, [100,100])
+        if COOKMODE == 2:
+            self.surface.blit(JJAJANG, [100,100])
+        if COOKMODE == 3:
+            self.surface.blit(TOPPED_RICE, [100,100])
+        if COOKMODE == 4:
+            self.surface.blit(POTATO_PANCAKE, [100,100])
+        
     def fried_rice(self):
         if MAKEUPMODE == 1:
             self.stir(FRIEDRICE1)
@@ -217,6 +309,27 @@ class Cookmode():
             self.pan2(POTATOPANCAKE2, POTATOPANCAKE3)
         else:
             self.finish()
+    
+def reset():
+    global INGAMEMODE, MODE, COOKMODE, MAKEUPMODE, ENDMODE, STIR_OUT, MICRO_DONE, CUT_OUT, ISCUT, ISPOT, PAN_OUT, NUMBER_OF_CUT_INGREDIENTS, NUMBER_OF_PAN_INGREDIENTS, STIR_COUNT
+    INGAMEMODE = 0
+    MODE = 0
+    COOKMODE = 0
+    MAKEUPMODE = 1
+    ENDMODE = 0
+    STIR_OUT = False
+    MICRO_DONE = False
+    CUT_OUT = False
+    ISCUT = False
+    ISPOT = False
+    PAN_OUT = False
+    NUMBER_OF_CUT_INGREDIENTS = 1
+    NUMBER_OF_PAN_INGREDIENTS = 1
+    STIR_COUNT = 0
+    
+    
+def end():
+    sys.exit()
 
 
 def background(image):
@@ -444,7 +557,7 @@ def game():
 
 
 def main():
-    global JOINTPOS, IDX, ISCUT
+    global JOINTPOS, IDX, ISCUT, ENDMODE
     max_num_hands = 1
     mp_hands = mp.solutions.hands
     mp_drawing_styles = mp.solutions.drawing_styles
@@ -509,18 +622,16 @@ def main():
                     cv2.putText(image, text=rps_gesture[IDX].upper(), 
                     org=(int(hand_landmarks.landmark[0].x * image.shape[1]), int(hand_landmarks.landmark[0].y * image.shape[0] + 20)), 
                     fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(125,125,125), thickness=2)
-                    draw_text(str(IDX), screen, 230, 230, FONT , BLACK)
                 
                 px = joint[7][0] * (WIDTH) + 0
                 py = joint[7][1] * (HEIGHT) + 0
                 JOINTPOS = [px,py]
                 
-                if INGAMEMODE == 1:
-                    if not ISCUT:
-                        screen.blit(pg.transform.scale(NORMAL_POINTER, [79, 93]), JOINTPOS)
-                    else:
+                if INGAMEMODE == 1 and ENDMODE == 0:
+                    if IDX == 9 or IDX == 3 or IDX == 1:
                         screen.blit(pg.transform.scale(KNIFE_POINTER, [79, 93]), JOINTPOS)
-                
+                    else:
+                        screen.blit(pg.transform.scale(NORMAL_POINTER, [79, 93]), JOINTPOS)
                 
                 mp_drawing.draw_landmarks(
                     image,
