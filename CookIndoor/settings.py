@@ -105,6 +105,8 @@ GAMESTARTBUTTON = pg.image.load('image/icon/game_start.png')
 GAMESTARTBUTTONPRESSED = pg.image.load('image/icon/game_start_press.png')
 MENUSELECT = pg.image.load('image/icon/menu_select.png')
 MENUSELECTHIGHLIGHT = pg.image.load('image/icon/menu_select_highlight.png')
+GAMEOVER = pg.image.load('image/icon/gameover.png')
+GAMEOVERPRESSED = pg.image.load('image/icon/gameoverpressed.png')
 #image/pointer
 KNIFE_POINTER = pg.image.load('image/pointer/knife_pointer.png')
 NORMAL_POINTER = pg.image.load('image/pointer/normal_pointer.png')
@@ -113,6 +115,11 @@ FRIED_RICE = pg.transform.scale(pg.image.load('image/dish/fried_rice.png'), [400
 JJAJANG = pg.transform.scale(pg.image.load('image/dish/jjajang.png'), [400,400])
 TOPPED_RICE = pg.transform.scale(pg.image.load('image/dish/topped_rice.png'), [400,400])
 POTATO_PANCAKE = pg.transform.scale(pg.image.load('image/dish/potato_pancake.png'), [400,400])
+#image/explanation
+STIR_EX = pg.image.load('image/explanation/stir_ex.png')
+CUT_EX = pg.image.load('image/explanation/cut_ex.png')
+MICRO_EX = pg.image.load('image/explanation/micro_ex.png')
+PAN_EX = pg.image.load('image/explanation/pan_ex.png')
 
 # define colors
 DARK_GRAY = (122,122,146)
@@ -165,63 +172,64 @@ TOPPEDRICE3 = '기름을 두르고 파, 마늘, 햄을 볶아줍니다.'
 TOPPEDRICE4 = '양념, 물, 체다치즈 반 장을 넣고 끓여줍니다. 물이 흥건하면 안돼요.'
 
 # potato_pancake
-POTATOPANCAKE1 = '감자 2개를 채썰어준다.'
+POTATOPANCAKE1 = '감자 2개를 채썰어주세요.'
 POTATOPANCAKE2 = '팬에 기름을 두르고 약불에서 감자를 얹어줍니다.'
 POTATOPANCAKE3 = 'TIP : 밀가루를 넣으면 서로 들러붙지 않아요. 여유가 된다면 같이 넣어줍니다.'
 
 #ingredients cut image
-ONION_1 = pg.transform.scale(pg.image.load('image/ingredient/onion_1.png'), [200,200])
-ONION_2 = pg.transform.scale(pg.image.load('image/ingredient/onion_2.png'), [200,200])
-ONION_3 = pg.transform.scale(pg.image.load('image/ingredient/onion_3.png'), [200,200])
+ONION_1 = pg.transform.scale(pg.image.load('image/ingredient/onion_1.png'), [300,300])
+ONION_2 = pg.transform.scale(pg.image.load('image/ingredient/onion_2.png'), [300,300])
+ONION_3 = pg.transform.scale(pg.image.load('image/ingredient/onion_3.png'), [300,300])
 
-SAUSAGE_1 = pg.transform.scale(pg.image.load('image/ingredient/sausage_1.png'), [200,100])
-SAUSAGE_2 = pg.transform.scale(pg.image.load('image/ingredient/sausage_2.png'), [200,100])
-SAUSAGE_3 = pg.transform.scale(pg.image.load('image/ingredient/sausage_3.png'), [200,100])
+SAUSAGE_1 = pg.transform.scale(pg.image.load('image/ingredient/sausage_1.png'), [300,150])
+SAUSAGE_2 = pg.transform.scale(pg.image.load('image/ingredient/sausage_2.png'), [300,150])
+SAUSAGE_3 = pg.transform.scale(pg.image.load('image/ingredient/sausage_3.png'), [300,150])
 
-GREEN_ONION_1 = pg.transform.scale(pg.image.load('image/ingredient/green-onion(0).png'), [200,200])
-GREEN_ONION_2 = pg.transform.scale(pg.image.load('image/ingredient/green-onion(1).png'), [200,200])
-GREEN_ONION_3 = pg.transform.scale(pg.image.load('image/ingredient/green-onion(2).png'), [200,200])
+GREEN_ONION_1 = pg.transform.scale(pg.image.load('image/ingredient/green-onion.png'), [300,300])
+GREEN_ONION_2 = pg.transform.scale(pg.image.load('image/ingredient/green-onion(0).png'), [300,300])
+GREEN_ONION_3 = pg.transform.scale(pg.image.load('image/ingredient/green-onion(1).png'), [300,300])
+GREEN_ONION_4 = pg.transform.scale(pg.image.load('image/ingredient/green-onion(2).png'), [300,300])
 
-POTATO_CUT = [pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato.png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(1).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(2).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(3).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(4).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(5).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(6).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(7).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(8).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(9).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(10).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(11).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(12).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(13).png'), [200,200]),]
+POTATO_CUT = [pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato.png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(1).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(2).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(3).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(4).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(5).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(6).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(7).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(8).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(9).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(10).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(11).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(12).png'), [300,300]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_cut/peeled_potato(13).png'), [300,300]),]
 
 #ingredients pan image
-FRYINGPAN = pg.transform.scale(pg.image.load('image/ingredient/pan.png'), [400,400])
+FRYINGPAN = pg.transform.scale(pg.image.load('image/ingredient/pan.png'), [500,500])
 
-BBOKEUM_1 = pg.transform.scale(pg.image.load('image/ingredient/bbokeum(1).png'), [200,200])
-BBOKEUM_2 = pg.transform.scale(pg.image.load('image/ingredient/bbokeum(2).png'), [200,200])
-BBOKEUM_3 = pg.transform.scale(pg.image.load('image/ingredient/bbokeum(3).png'), [200,200])
+BBOKEUM_1 = pg.transform.scale(pg.image.load('image/ingredient/bbokeum(1).png'), [300,300])
+BBOKEUM_2 = pg.transform.scale(pg.image.load('image/ingredient/bbokeum(2).png'), [300,300])
+BBOKEUM_3 = pg.transform.scale(pg.image.load('image/ingredient/bbokeum(3).png'), [300,300])
 
-POTATO_PAN = [pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(1).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(2).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(3).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(4).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(5).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(6).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(7).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(8).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(9).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(10).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(11).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(12).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(13).png'), [200,200]),
-              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(14).png'), [200,200]),]
+POTATO_PAN = [pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(1).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(2).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(3).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(4).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(5).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(6).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(7).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(8).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(9).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(10).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(11).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(12).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(13).png'), [200, 200]),
+              pg.transform.scale(pg.image.load('image/ingredient/potato_pan/potato(14).png'), [200, 200]),]
 #ingredients pot image
-FIRE = [pg.transform.scale(pg.image.load('image/ingredient/fire.png'), [200,200]),
-        pg.transform.scale(pg.image.load('image/ingredient/fire(1).png'), [200,200]),
-        pg.transform.scale(pg.image.load('image/ingredient/fire(2).png'), [200,200])]
+FIRE = [pg.transform.scale(pg.image.load('image/ingredient/fire.png'), [100,100]),
+        pg.transform.scale(pg.image.load('image/ingredient/fire(1).png'), [100,100]),
+        pg.transform.scale(pg.image.load('image/ingredient/fire(2).png'), [100,100])]
 
 #stir bool variable
 STIR_OUT = False
