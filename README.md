@@ -9,7 +9,7 @@ CookIndoor는 openCV를 이용한 요리 시뮬레이션 게임입니다.
 * ### [Feature](#feature-1)
 * ### [How to start?](#how-to-start-1)
 * ### [How to play?](#how-to-play-1)
-* ### [Describe the development process](#describe-the-development-process)
+* ### [Describe the development process](#describe-the-development-process-1)
 * ### [Demo video](#demo-video-1)
 
 ## [Feature](#feature)
