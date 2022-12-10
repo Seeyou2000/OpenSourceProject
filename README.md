@@ -358,7 +358,7 @@ def stir(self, caption):  # 재료만 변경 매개변수에 ingredient
 ```
 #### 세부사항
 * 이미지를 60개로 나눠서 애니메이션이 작동하는 것처럼 보이도록 설계
-https://github.com/Seeyou2000/OpenSourceProject/blob/main/CookIndoor/video/stir%EC%98%81%EC%83%81.mp4
+<img src="https://user-images.githubusercontent.com/99472300/206842846-6050722b-aaa6-49f6-8c21-6cb89793ee22.mp4" alt="stir_video">
 
 ### 5. 인게임 기능(cut(자르기) 구현)
 ```
