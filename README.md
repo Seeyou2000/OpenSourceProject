@@ -16,6 +16,7 @@ CookIndoor는 openCV를 이용한 요리 시뮬레이션 게임입니다.
 <p align="center">
 <img src="CookIndoor/demo_image/menu2.png" alt="menu image" width="80%" height="60%">
 </p>
+
 실제 요리법 바탕으로 게임을 구현하여 게임을 통해 레시피 익히는 게임입니다.
 
 <p align="center">
@@ -24,7 +25,7 @@ CookIndoor는 openCV를 이용한 요리 시뮬레이션 게임입니다.
 누구나 할 수 있는 요리법을 사용하였고 손 동작을 활용하여 직접 요리합니다.
 
 
-# [How to start?](#how-to-start)
+## [How to start?](#how-to-start)
 ### 환경 설정
 
 먼저 캠을 사용할 수 있는 장치가 필요합니다.
@@ -54,13 +55,13 @@ pip install pygame
 python maingame.py
 ```
 
-# [How to play?](#how-to-play)
+## [How to play?](#how-to-play)
 * ## 게임 시작하기
-##### 들어가기에 앞서
+#### 들어가기에 앞서
 
 이 게임은 게임 모드에서만 openCV로 작동되며 그 외의 버튼은 모두 마우스로 작동합니다.
 
-##### 포인터
+#### 포인터
 
 // 가위 바위 보에 대한 설명 적으면 될 것 같아
 
@@ -70,8 +71,8 @@ python maingame.py
 </p>
 
 게임을 실행하면 시작화면에 메뉴 선택을 눌러주세요.
-
 종료하고자 한다면 우측 하단에 있는 종료 버튼을 눌러주세요.
+
 
 <p align="center">
 <img src="CookIndoor/demo_image/menu1.png" alt="start image" width="80%" height="60%">
@@ -80,7 +81,6 @@ python maingame.py
 **메뉴를 선택하세요**
 
 4가지의 요리 중 원하는 메뉴를 선택한 후 게임 시작하기 버튼을 눌러주세요.
-
 메뉴를 선택하지 않을 시에는 게임 시작하기 버튼이 활성화되지 않아요. 주의해주세요.
 
 * ## 게임 모드
@@ -92,20 +92,24 @@ python maingame.py
 <img src="CookIndoor/image/explanation/stir_ex.PNG" alt="stir image" width="80%" height="60%">
 </p>
 
+
    * ### 전자레인지 돌리기
 <p align="center">
 <img src="CookIndoor/image/explanation/micro_ex.PNG" alt="microwave image" width="80%" height="60%">
 </p>
+
 
    * ### 자르기
 <p align="center">
 <img src="CookIndoor/image/explanation/cut_ex.PNG" alt="cut image" width="80%" height="60%">
 </p>
 
+
    * ### 프라이팬
 <p align="center">
 <img src="CookIndoor/image/explanation/pan_ex.PNG" alt="pan image" width="80%" height="60%">
 </p>
+
 
    * ### 냄비
 <p align="center">
