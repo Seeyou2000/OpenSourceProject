@@ -76,7 +76,8 @@ class Cookmode():
         pg.time.delay(1500)
 
     def stir(self, caption):  # 재료만 변경 매개변수에 ingredient
-        global STIR_OUT, MAKEUPMODE, STIR_COUNT
+        global STIR_OUT, MAKEUPMODE, STIR_COUNT, MICRO_DONE
+        MICRO_DONE = False
 
         background(STIR)
         self.caption_in(caption)
@@ -186,7 +187,6 @@ class Cookmode():
 
         background(MICRO)
         self.caption_in(caption)
-        # self.micro_ground = pg.draw.rect(self.surface, BLACK, (200,150,400,300))
         self.micro_ground = pg.Rect((200, 150, 400, 300))
         if self.micro_ground.collidepoint(JOINTPOS) and rock_motion():
             MICRO_DONE = True
@@ -401,7 +401,6 @@ def fourth_button_select_scene():  # MODE : 14
 def cooking_menu_select():
     global MODE, COOKMODE, INGAMEMODE
     INGAMEMODE = 1
-    print(INGAMEMODE)
     if MODE == 11:
         COOKMODE = 1
     elif MODE == 12:
@@ -410,7 +409,6 @@ def cooking_menu_select():
         COOKMODE = 3
     elif MODE == 14:
         COOKMODE = 4
-    print(COOKMODE)
 
 
 def draw_text(text, surface, x, y, font=FONT, color=BLACK):
@@ -434,7 +432,6 @@ def rock_motion():
     if (BUFFER == 5) and (IDX == 0 or IDX == 6):
         return True
     else:
-        print(BUFFER)
         BUFFER = IDX
         return False
 
@@ -445,7 +442,6 @@ def paper_motion():
         return True
     else:
         BUFFER = IDX
-        print(BUFFER)
         return False
 
 
@@ -680,7 +676,7 @@ def main():
                     mp_drawing_styles.get_default_hand_landmarks_style(),
                     mp_drawing_styles.get_default_hand_connections_style())
 
-        # cv2.imshow('Game', image) #카메라 나오게하는 코드
+        #cv2.imshow('Game', image) #카메라 나오게하는 코드
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
