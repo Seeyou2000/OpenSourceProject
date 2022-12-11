@@ -574,6 +574,14 @@ def pot(self, caption):
 
 ## [Demo video](#demo-video)
 
+<img src="https://user-images.githubusercontent.com/99472300/206881806-b802f3eb-0e04-4a76-9c2f-62b0f9760f2a.mp4" alt="demo_video1">
+<img src="https://user-images.githubusercontent.com/99472300/206881807-9ef0033b-7dd2-4c09-bae5-5f7a992211de.mp4" alt="demo_video2">
+<img src="https://user-images.githubusercontent.com/99472300/206881808-d5619ae5-4ba1-4a58-99cd-2d75652453fe.mp4" alt="demo_video3">
+
+#### 캠을 실행시키려면 679줄에 있는 이 코드의 주석을 해제하시면 됩니다.
+```
+cv2.imshow('Game', image)
+```
 
 ## [느낀점](#느낀점)
 
